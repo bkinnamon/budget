@@ -1,55 +1,131 @@
 <template>
-  <div>
-    <nuxt />
+  <div class="page">
+    <header class="header">
+      <h1>Budget</h1>
+      <div class="header__user">
+        <button class="btn btn--text">Login</button>
+      </div>
+    </header>
+    <main class="main">
+      <nuxt />
+    </main>
   </div>
 </template>
 
-<style>
-html {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 16px;
-  word-spacing: 1px;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  box-sizing: border-box;
-}
+<script>
+export default {}
+</script>
 
-*,
-*:before,
-*:after {
+<style lang="scss" scoped>
+.page {
+  background: darken($c-white, 10%);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  .header {
+    align-items: center;
+    background: $c-primary;
+    box-shadow: $shadow;
+    color: $c-white;
+    display: flex;
+    flex: 0 0 64px;
+    justify-content: space-between;
+    padding: 0 32px;
+    z-index: 100;
+
+    @media screen and (max-width: $b-small) {
+      flex: 0 0 48px;
+      padding: 0 16px;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+
+      @media screen and (max-width: $b-small) {
+        font-size: 1rem;
+      }
+    }
+
+    .btn--text {
+      color: $c-white;
+    }
+  }
+
+  .main {
+    background: $c-white;
+    flex: 1;
+    max-width: 768px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+</style>
+
+<style lang="scss">
+* {
   box-sizing: border-box;
   margin: 0;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  transition: 0.2s ease;
 }
 
-.button--green {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #3b8070;
-  color: #3b8070;
-  text-decoration: none;
-  padding: 10px 30px;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Comfortaa', sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
 }
 
-.button--green:hover {
-  color: #fff;
-  background-color: #3b8070;
+.btn {
+  align-items: center;
+  background: darken($c-white, 10%);
+  border: none;
+  border-radius: $s-radius;
+  cursor: pointer;
+  display: flex;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+
+  &:hover {
+    background: darken($c-white, 20%);
+  }
+
+  &--text {
+    background: none;
+
+    &:hover {
+      background: $c-shadow;
+    }
+  }
+
+  &--icon {
+    align-items: center;
+    background: none;
+    border-radius: 100%;
+    display: flex;
+    font-weight: 300;
+    height: 32px;
+    justify-content: center;
+    width: 32px;
+
+    &:hover {
+      background: $c-shadow;
+    }
+  }
 }
 
-.button--grey {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #35495e;
-  color: #35495e;
-  text-decoration: none;
-  padding: 10px 30px;
-  margin-left: 15px;
-}
+// TRANSITIONS
 
-.button--grey:hover {
-  color: #fff;
-  background-color: #35495e;
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

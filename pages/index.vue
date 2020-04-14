@@ -1,68 +1,96 @@
 <template>
-  <div class="container">
-    <div>
-      <logo />
-      <h1 class="title">
-        Budget
-      </h1>
-      <h2 class="subtitle">
-        A simple budgeting app based on the envelope method.
-      </h2>
-      <div class="links">
-        <a href="https://nuxtjs.org/" target="_blank" class="button--green">
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
+  <div>
+    <div class="balance balance--negative">
+      <span>{{ -1199.99 | usd }}</span>
+      <button class="btn btn--process" @click="process">
+        <Icon icon="cogs" />
+        Process
+      </button>
     </div>
+    <div class="lists">
+      <List title="Transactions" :items="transactions" />
+      <List title="Envelopes" :items="envelopes" />
+    </div>
+    <Dialog v-model="dialog" title="End of Cycle Processing">
+      <template>
+        CONTENT
+      </template>
+      <template v-slot:actions>
+        ACTIONS
+      </template>
+    </Dialog>
   </div>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
+import { mapState } from 'vuex'
+
+import Dialog from '~/components/Dialog'
+import Icon from '~/components/Icon'
+import List from '~/components/List'
 
 export default {
   components: {
-    Logo
+    Dialog,
+    Icon,
+    List
+  },
+  data() {
+    return {
+      dialog: false
+    }
+  },
+  computed: {
+    ...mapState('budget', ['transactions', 'envelopes'])
+  },
+  methods: {
+    process() {
+      this.dialog = true
+    }
   }
 }
 </script>
 
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
+<style lang="scss" scoped>
+.balance {
+  align-items: center;
+  background: $c-accent;
+  color: $c-white;
   display: flex;
   justify-content: center;
-  align-items: center;
-  text-align: center;
+  height: 64px;
+  margin-bottom: 16px;
+  position: relative;
+
+  @media screen and (max-width: $b-small) {
+    height: 128px;
+  }
+
+  > span {
+    font-size: 2rem;
+  }
+
+  .btn--process {
+    background: $c-primary;
+    color: $c-white;
+    position: absolute;
+    right: 16px;
+
+    &:hover {
+      background: darken($c-primary, 2%);
+    }
+
+    @media screen and (max-width: $b-small) {
+      display: none;
+    }
+  }
 }
 
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
+.lists {
+  display: flex;
 
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
+  div {
+    flex: 0 0 50%;
+  }
 }
 </style>
