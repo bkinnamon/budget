@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="balance balance--negative">
-      <span>{{ -1199.99 | usd }}</span>
+    <div class="balance balance--positive">
+      <span>{{ balance | usd }}</span>
       <button class="btn btn--process" @click="process">
         <Icon icon="cogs" />
         Process
@@ -41,7 +41,13 @@ export default {
     }
   },
   computed: {
-    ...mapState('budget', ['transactions', 'envelopes'])
+    ...mapState('budget', ['start', 'transactions', 'envelopes']),
+    balance() {
+      const balance = this.transactions.reduce((value, t) => {
+        return value + t.amount
+      }, this.start)
+      return balance
+    }
   },
   methods: {
     process() {
@@ -54,8 +60,6 @@ export default {
 <style lang="scss" scoped>
 .balance {
   align-items: center;
-  background: $c-accent;
-  color: $c-white;
   display: flex;
   justify-content: center;
   height: 64px;
@@ -64,6 +68,16 @@ export default {
 
   @media screen and (max-width: $b-small) {
     height: 128px;
+  }
+
+  &--positive {
+    background: lighten($c-info, 50%);
+    color: $c-black;
+  }
+
+  &--negative {
+    background: $c-accent;
+    color: $c-white;
   }
 
   > span {

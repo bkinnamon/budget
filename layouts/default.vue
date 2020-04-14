@@ -73,6 +73,10 @@ export default {}
   transition: 0.2s ease;
 }
 
+body {
+  color: $c-black;
+}
+
 h1,
 h2,
 h3,
