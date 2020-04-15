@@ -100,6 +100,8 @@ export default {
   &__actions {
     background: $c-white;
     border-top: 1px solid darken($c-white, 10%);
+    display: flex;
+    justify-content: flex-end;
     padding: 16px;
   }
 }

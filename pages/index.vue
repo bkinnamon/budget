@@ -8,8 +8,8 @@
       </button>
     </div>
     <div class="lists">
-      <List title="Transactions" :items="transactions" />
-      <List title="Envelopes" :items="envelopes" />
+      <TransactionList :transactions="transactions" />
+      <EnvelopeList :envelopes="envelopes" :transactions="transactions" />
     </div>
     <Dialog v-model="dialog" title="End of Cycle Processing">
       <template>
@@ -27,13 +27,15 @@ import { mapState } from 'vuex'
 
 import Dialog from '~/components/Dialog'
 import Icon from '~/components/Icon'
-import List from '~/components/List'
+import EnvelopeList from '@/components/EnvelopeList.vue'
+import TransactionList from '@/components/TransactionList.vue'
 
 export default {
   components: {
     Dialog,
     Icon,
-    List
+    EnvelopeList,
+    TransactionList
   },
   data() {
     return {
@@ -48,6 +50,9 @@ export default {
       }, this.start)
       return balance
     }
+  },
+  created() {
+    this.$store.dispatch('budget/get')
   },
   methods: {
     process() {

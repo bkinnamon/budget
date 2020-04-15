@@ -1,7 +1,7 @@
 <template>
   <button
     class="btn btn--item"
-    :class="item.isPositive ? 'btn--item-positive' : 'btn--item-negative'"
+    :class="positive ? 'btn--item-positive' : 'btn--item-negative'"
     :title="item.description"
   >
     <div class="description">
@@ -19,6 +19,10 @@ export default {
   props: {
     item: {
       type: Object,
+      required: true
+    },
+    positive: {
+      type: Boolean,
       required: true
     }
   }

@@ -102,6 +102,20 @@ h6 {
     background: darken($c-white, 20%);
   }
 
+  > span {
+    margin: 0 4px;
+  }
+
+  &--primary {
+    background: $c-accent;
+    color: $c-white;
+    font-weight: 500;
+
+    &:hover {
+      background: darken($c-accent, 10%);
+    }
+  }
+
   &--text {
     background: none;
 
@@ -123,6 +137,25 @@ h6 {
     &:hover {
       background: $c-shadow;
     }
+  }
+}
+
+.list {
+  overflow: hidden;
+  padding: 16px;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+
+    h2 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .items {
+    border-radius: $s-radius;
+    list-style: none;
   }
 }
 

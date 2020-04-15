@@ -59,7 +59,31 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+    [
+      '@nuxtjs/firebase',
+      {
+        config: {
+          apiKey: 'AIzaSyDWG-0kg5xGxM080esxRLq7cpHKc12Lgnw',
+          authDomain: 'brettk-budget.firebaseapp.com',
+          databaseURL: 'https://brettk-budget.firebaseio.com',
+          projectId: 'brettk-budget',
+          storageBucket: 'brettk-budget.appspot.com',
+          messagingSenderId: '865264321618',
+          appId: '1:865264321618:web:e8d69d3ae0142181888b8b',
+          measurementId: 'G-VLW2MK8SX6'
+        },
+        services: {
+          auth: false,
+          firestore: {
+            enablePersistence: {
+              synchronizeTabs: true
+            }
+          },
+          analytics: false
+        }
+      }
+    ]
   ],
   /*
    ** Axios module configuration
