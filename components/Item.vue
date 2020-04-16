@@ -3,6 +3,7 @@
     class="btn btn--item"
     :class="positive ? 'btn--item-positive' : 'btn--item-negative'"
     :title="item.description"
+    @click="$emit('click')"
   >
     <div class="description">
       {{ item.description }}

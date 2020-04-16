@@ -8,7 +8,7 @@
     >
       <div class="dialog">
         <header class="dialog__header">
-          <div class="dialog__title">{{ title }}</div>
+          <h3 class="dialog__title">{{ title }}</h3>
           <button class="btn btn--icon dialog__close" @click="close">
             <Icon icon="times" />
           </button>
@@ -44,6 +44,7 @@ export default {
   methods: {
     close() {
       this.$emit('input', false)
+      this.$emit('close')
     }
   }
 }

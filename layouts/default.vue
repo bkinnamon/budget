@@ -98,6 +98,10 @@ h6 {
   font-size: 1rem;
   padding: 0.5rem 1rem;
 
+  + .btn {
+    margin-left: 8px;
+  }
+
   &:hover {
     background: darken($c-white, 20%);
   }
@@ -157,6 +161,10 @@ h6 {
     border-radius: $s-radius;
     list-style: none;
   }
+}
+
+.spacer {
+  flex: 1;
 }
 
 // TRANSITIONS

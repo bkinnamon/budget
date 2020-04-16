@@ -8,7 +8,7 @@
       </button>
     </div>
     <div class="lists">
-      <TransactionList :transactions="transactions" />
+      <TransactionList :envelopes="envelopes" :transactions="transactions" />
       <EnvelopeList :envelopes="envelopes" :transactions="transactions" />
     </div>
     <Dialog v-model="dialog" title="End of Cycle Processing">
@@ -24,6 +24,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import _ from 'lodash'
 
 import Dialog from '~/components/Dialog'
 import Icon from '~/components/Icon'
@@ -43,7 +44,13 @@ export default {
     }
   },
   computed: {
-    ...mapState('budget', ['start', 'transactions', 'envelopes']),
+    ...mapState('budget', ['start']),
+    transactions() {
+      return _.cloneDeep(this.$store.state.budget.transactions)
+    },
+    envelopes() {
+      return _.cloneDeep(this.$store.state.budget.envelopes)
+    },
     balance() {
       const balance = this.transactions.reduce((value, t) => {
         return value + t.amount

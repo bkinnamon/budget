@@ -27,7 +27,7 @@ export const actions = {
       querySnapshot.forEach((transactionDoc) => {
         transactions.push({
           ...transactionDoc.data(),
-          id: transactionDoc._id
+          id: transactionDoc.id
         })
       })
       commit('SET_TRANSACTIONS', transactions)
@@ -37,10 +37,35 @@ export const actions = {
       querySnapshot.forEach((envelopeDoc) => {
         envelopes.push({
           ...envelopeDoc.data(),
-          id: envelopeDoc._id
+          id: envelopeDoc.id
         })
       })
       commit('SET_ENVELOPES', envelopes)
     })
+  },
+  saveTransaction(_, transaction) {
+    if (transaction.id) {
+      this.$fireStore
+        .doc(`budgets/test/transactions/${transaction.id}`)
+        .update(transaction)
+    } else {
+      this.$fireStore.collection('budgets/test/transactions').add(transaction)
+    }
+  },
+  deleteTransaction(_, transaction) {
+    this.$fireStore.doc(`budgets/test/transactions/${transaction.id}`).delete()
+  },
+  saveEnvelope(_, envelope) {
+    if (envelope.id) {
+      this.$fireStore.doc(`budgets/test/envelopes/${envelope.id}`).update({
+        description: envelope.description,
+        amount: envelope.amount
+      })
+    } else {
+      this.$fireStore.collection('budgets/test/envelopes').add(envelope)
+    }
+  },
+  deleteEnvelope(_, envelope) {
+    this.$fireStore.doc(`budgets/test/envelopes/${envelope.id}`).delete()
   }
 }
