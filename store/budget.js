@@ -22,16 +22,19 @@ export const actions = {
     budgetRef.onSnapshot((budgetDoc) => {
       commit('SET_START', budgetDoc.data().start)
     })
-    budgetRef.collection('transactions').onSnapshot((querySnapshot) => {
-      const transactions = []
-      querySnapshot.forEach((transactionDoc) => {
-        transactions.push({
-          ...transactionDoc.data(),
-          id: transactionDoc.id
+    budgetRef
+      .collection('transactions')
+      .where('archived', '==', false)
+      .onSnapshot((querySnapshot) => {
+        const transactions = []
+        querySnapshot.forEach((transactionDoc) => {
+          transactions.push({
+            ...transactionDoc.data(),
+            id: transactionDoc.id
+          })
         })
+        commit('SET_TRANSACTIONS', transactions)
       })
-      commit('SET_TRANSACTIONS', transactions)
-    })
     budgetRef.collection('envelopes').onSnapshot((querySnapshot) => {
       const envelopes = []
       querySnapshot.forEach((envelopeDoc) => {
@@ -47,9 +50,17 @@ export const actions = {
     if (transaction.id) {
       this.$fireStore
         .doc(`budgets/test/transactions/${transaction.id}`)
-        .update(transaction)
+        .update({
+          description: transaction.description,
+          amount: transaction.amount,
+          envelope: transaction.envelope,
+          archived: false
+        })
     } else {
-      this.$fireStore.collection('budgets/test/transactions').add(transaction)
+      this.$fireStore.collection('budgets/test/transactions').add({
+        ...transaction,
+        archived: false
+      })
     }
   },
   deleteTransaction(_, transaction) {
@@ -67,5 +78,21 @@ export const actions = {
   },
   deleteEnvelope(_, envelope) {
     this.$fireStore.doc(`budgets/test/envelopes/${envelope.id}`).delete()
+  },
+  process(_, balance) {
+    const batch = this.$fireStore.batch()
+    batch.update(this.$fireStore.doc('budgets/test'), { start: balance })
+    this.$fireStore
+      .collection('budgets/test/transactions')
+      .where('archived', '==', false)
+      .get()
+      .then((snapshotQuery) => {
+        snapshotQuery.forEach((t) => {
+          batch.update(t.ref, { archived: true })
+        })
+      })
+      .then(() => {
+        batch.commit()
+      })
   }
 }

@@ -72,6 +72,7 @@ export default {
 
   border-radius: $s-radius;
   box-shadow: $shadow;
+  margin: 16px;
   max-width: 512px;
   overflow: hidden;
 

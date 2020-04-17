@@ -54,6 +54,7 @@ export default {}
 
   .main {
     background: $c-white;
+    display: flex;
     flex: 1;
     max-width: 768px;
     margin: 0 auto;
@@ -88,6 +89,11 @@ h6 {
   font-weight: 300;
 }
 
+p {
+  line-height: 1.6rem;
+  margin-bottom: 1rem;
+}
+
 .btn {
   align-items: center;
   background: darken($c-white, 10%);
@@ -113,10 +119,13 @@ h6 {
   &--primary {
     background: $c-accent;
     color: $c-white;
-    font-weight: 500;
 
     &:hover {
       background: darken($c-accent, 10%);
+    }
+
+    > span {
+      font-weight: 500;
     }
   }
 
