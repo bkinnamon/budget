@@ -8,8 +8,12 @@
     >
       <div class="dialog">
         <header class="dialog__header">
-          <h3 class="dialog__title">{{ title }}</h3>
-          <button class="btn btn--icon dialog__close" @click="close">
+          <h3 class="dialog__title">{{ title | capitalize }}</h3>
+          <button
+            class="btn btn--icon dialog__close"
+            type="button"
+            @click="close"
+          >
             <Icon icon="times" />
           </button>
         </header>

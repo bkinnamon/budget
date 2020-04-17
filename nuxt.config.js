@@ -41,7 +41,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/usd'],
+  plugins: ['~/plugins/capitalize', '~/plugins/usd'],
   /*
    ** Nuxt.js dev-modules
    */
@@ -74,7 +74,7 @@ export default {
           measurementId: 'G-VLW2MK8SX6'
         },
         services: {
-          auth: false,
+          auth: true,
           firestore: {
             enablePersistence: {
               synchronizeTabs: true

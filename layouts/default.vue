@@ -3,17 +3,49 @@
     <header class="header">
       <h1>Budget</h1>
       <div class="header__user">
-        <button class="btn btn--text">Login</button>
+        <template v-if="$store.state.user.id">
+          <span style="margin-right: 8px;">Welcome back!</span>
+          <button class="btn btn--text" @click="logout">Logout</button>
+        </template>
+        <template v-else>
+          <button class="btn btn--text" @click="login">Login</button>
+          <button class="btn btn--text" @click="register">Register</button>
+        </template>
       </div>
     </header>
     <main class="main">
       <nuxt />
     </main>
+    <LoginDialog v-model="loginDialog" type="login" />
+    <LoginDialog v-model="registerDialog" type="register" />
   </div>
 </template>
 
 <script>
-export default {}
+import LoginDialog from '@/components/LoginDialog.vue'
+
+export default {
+  components: {
+    LoginDialog
+  },
+  data() {
+    return {
+      loginDialog: false,
+      registerDialog: false
+    }
+  },
+  methods: {
+    login() {
+      this.loginDialog = true
+    },
+    logout() {
+      this.$store.dispatch('user/logout')
+    },
+    register() {
+      this.registerDialog = true
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -37,6 +69,11 @@ export default {}
     @media screen and (max-width: $b-small) {
       flex: 0 0 48px;
       padding: 0 16px;
+    }
+
+    &__user {
+      align-items: center;
+      display: flex;
     }
 
     h1 {
