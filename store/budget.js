@@ -17,14 +17,18 @@ export const mutations = {
 }
 
 export const actions = {
-  get({ commit }) {
-    const budgetRef = this.$fireStore.collection('budgets').doc('test')
+  get({ commit, rootState }) {
+    if (!rootState.user.id) {
+      return
+    }
+    const budgetId = rootState.user.budget
+    const budgetRef = this.$fireStore.doc(`budgets/${budgetId}`)
     budgetRef.onSnapshot((budgetDoc) => {
-      commit('SET_START', budgetDoc.data().start)
+      commit(`SET_START`, budgetDoc.data().start)
     })
     budgetRef
-      .collection('transactions')
-      .where('archived', '==', false)
+      .collection(`transactions`)
+      .where(`archived`, `==`, false)
       .onSnapshot((querySnapshot) => {
         const transactions = []
         querySnapshot.forEach((transactionDoc) => {
@@ -33,9 +37,9 @@ export const actions = {
             id: transactionDoc.id
           })
         })
-        commit('SET_TRANSACTIONS', transactions)
+        commit(`SET_TRANSACTIONS`, transactions)
       })
-    budgetRef.collection('envelopes').onSnapshot((querySnapshot) => {
+    budgetRef.collection(`envelopes`).onSnapshot((querySnapshot) => {
       const envelopes = []
       querySnapshot.forEach((envelopeDoc) => {
         envelopes.push({
@@ -43,13 +47,14 @@ export const actions = {
           id: envelopeDoc.id
         })
       })
-      commit('SET_ENVELOPES', envelopes)
+      commit(`SET_ENVELOPES`, envelopes)
     })
   },
-  saveTransaction(_, transaction) {
+
+  saveTransaction({ rootState }, transaction) {
     if (transaction.id) {
       this.$fireStore
-        .doc(`budgets/test/transactions/${transaction.id}`)
+        .doc(`budgets/${rootState.user.budget}/transactions/${transaction.id}`)
         .update({
           description: transaction.description,
           amount: transaction.amount,
@@ -57,34 +62,50 @@ export const actions = {
           archived: false
         })
     } else {
-      this.$fireStore.collection('budgets/test/transactions').add({
-        ...transaction,
-        archived: false
-      })
+      this.$fireStore
+        .collection(`budgets/${rootState.user.budget}/transactions`)
+        .add({
+          ...transaction,
+          archived: false
+        })
     }
   },
-  deleteTransaction(_, transaction) {
-    this.$fireStore.doc(`budgets/test/transactions/${transaction.id}`).delete()
-  },
-  saveEnvelope(_, envelope) {
-    if (envelope.id) {
-      this.$fireStore.doc(`budgets/test/envelopes/${envelope.id}`).update({
-        description: envelope.description,
-        amount: envelope.amount
-      })
-    } else {
-      this.$fireStore.collection('budgets/test/envelopes').add(envelope)
-    }
-  },
-  deleteEnvelope(_, envelope) {
-    this.$fireStore.doc(`budgets/test/envelopes/${envelope.id}`).delete()
-  },
-  process(_, balance) {
-    const batch = this.$fireStore.batch()
-    batch.update(this.$fireStore.doc('budgets/test'), { start: balance })
+
+  deleteTransaction({ rootState }, transaction) {
     this.$fireStore
-      .collection('budgets/test/transactions')
-      .where('archived', '==', false)
+      .doc(`budgets/${rootState.user.budget}/transactions/${transaction.id}`)
+      .delete()
+  },
+
+  saveEnvelope({ rootState }, envelope) {
+    if (envelope.id) {
+      this.$fireStore
+        .doc(`budgets/${rootState.user.budget}/envelopes/${envelope.id}`)
+        .update({
+          description: envelope.description,
+          amount: envelope.amount
+        })
+    } else {
+      this.$fireStore
+        .collection(`budgets/${rootState.user.budget}/envelopes`)
+        .add(envelope)
+    }
+  },
+
+  deleteEnvelope({ rootState }, envelope) {
+    this.$fireStore
+      .doc(`budgets/${rootState.user.budget}/envelopes/${envelope.id}`)
+      .delete()
+  },
+
+  process({ rootState }, balance) {
+    const batch = this.$fireStore.batch()
+    batch.update(this.$fireStore.doc(`budgets/${rootState.user.budget}`), {
+      start: balance
+    })
+    this.$fireStore
+      .collection(`budgets/${rootState.user.budget}/transactions`)
+      .where(`archived`, `==`, false)
       .get()
       .then((snapshotQuery) => {
         snapshotQuery.forEach((t) => {

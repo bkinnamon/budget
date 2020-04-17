@@ -45,6 +45,8 @@ export default {
   },
   methods: {
     close() {
+      this.email = ''
+      this.password = ''
       this.$emit('input', false)
     },
     login() {

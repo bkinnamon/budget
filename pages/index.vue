@@ -1,6 +1,10 @@
 <template>
-  <div class="page--balance">
-    <div class="balance balance--positive">
+  <Splash v-if="!userId" />
+  <div v-else class="page--balance">
+    <div
+      class="balance"
+      :class="balance >= 0 ? 'balance--positive' : 'balance--negative'"
+    >
       <span>{{ balance | usd }}</span>
       <button class="btn btn--process" @click="show">
         <Icon icon="cogs" />
@@ -61,6 +65,7 @@ import _ from 'lodash'
 import Dialog from '~/components/Dialog'
 import Icon from '~/components/Icon'
 import EnvelopeList from '@/components/EnvelopeList.vue'
+import Splash from '@/components/Splash.vue'
 import TransactionList from '@/components/TransactionList.vue'
 
 export default {
@@ -68,6 +73,7 @@ export default {
     Dialog,
     Icon,
     EnvelopeList,
+    Splash,
     TransactionList
   },
   data() {
@@ -92,14 +98,22 @@ export default {
     },
     listStyle() {
       return `--offset: -${this.active * 100}vw;`
+    },
+    userId() {
+      return this.$store.state.user.id
     }
   },
-  created() {
-    this.$store.dispatch('budget/get')
+  watch: {
+    userId(id) {
+      this.getData()
+    }
   },
   methods: {
     cancel() {
       this.dialog = false
+    },
+    getData() {
+      this.$store.dispatch('budget/get')
     },
     process() {
       this.$store.dispatch('budget/process', this.balance)

@@ -1,10 +1,12 @@
 export const state = () => ({
-  id: null
+  id: null,
+  budget: null
 })
 
 export const mutations = {
-  SET_USER_ID(state, id) {
-    state.id = id
+  SET_USER(state, user) {
+    state.id = user?.uid || null
+    state.budget = user?.budget || null
   }
 }
 
@@ -13,14 +15,22 @@ export const actions = {
     return this.$fireAuth
       .signInWithEmailAndPassword(email, password)
       .then(({ user }) => {
-        commit('SET_USER_ID', user.uid)
+        this.$fireStore
+          .doc(`users/${user.uid}`)
+          .get()
+          .then((userDoc) => {
+            commit('SET_USER', {
+              uid: user.uid,
+              budget: userDoc.data().budget
+            })
+          })
       })
   },
   logout({ commit }) {
     this.$fireAuth
       .signOut()
       .then(() => {
-        commit('SET_USER_ID', null)
+        commit('SET_USER', null)
       })
       .catch((error) => {
         console.error(error)
@@ -30,7 +40,14 @@ export const actions = {
     return this.$fireAuth
       .createUserWithEmailAndPassword(email, password)
       .then(({ user }) => {
-        commit('SET_USER_ID', user.uid)
+        this.$fireStore
+          .collection('budgets')
+          .add({ start: 0 })
+          .then(({ id }) => {
+            this.$fireStore.doc(`users/${user.uid}`).set({ budget: id })
+            user.budget = id
+            commit('SET_USER', user)
+          })
       })
   }
 }
